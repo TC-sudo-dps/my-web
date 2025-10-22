@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TC個人網站 - 資訊安全與網頁開發</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 基本樣式設置 */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #e2e8f0; /* 淺灰白色 */
+            background-color: #0f172a; /* 深藍色背景 */
+            overflow-x: hidden;
+        }
+
+        /* 3D 背景樣式 */
+        #bg-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        /* 頁面內容最大寬度 */
+        .container {
+            max-width: 1200px;
+        }
+
+        #bg-3d canvas {
+            display: block;
+        }
+
+        /* 自訂滾動條樣式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background-color: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #334155;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #475569;
+        }
+
+        /* 好友牆滾動動畫 */
+        #friends-scroller {
+            animation: scrollLeft 40s linear infinite;
+        }
+
+        #friends-container-wrapper:hover #friends-scroller {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollLeft {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div id="bg-3d"></div>
+
+    <div class="container mx-auto px-4 md:px-6 relative z-10">
+
+        <nav class="py-4 md:py-6 sticky top-0 z-50">
+            <ul class="flex justify-center space-x-6 md:space-x-10 backdrop-blur-md bg-slate-900/70 p-3 rounded-full shadow-2xl border border-slate-700/50">
+                <li><a href="#about" class="text-slate-200 hover:text-cyan-400 transition font-semibold">關於我</a></li>
+                <li><a href="#skills" class="text-slate-200 hover:text-cyan-400 transition font-semibold">技能樹</a></li>
+                <li><a href="#projects" class="text-slate-200 hover:text-cyan-400 transition font-semibold">專案</a></li>
+                <li><a href="#friends" class="text-slate-200 hover:text-cyan-400 transition font-semibold">我的好友</a></li>
+                <li><a href="#contact" class="text-slate-200 hover:text-cyan-400 transition font-semibold">聯繫我</a></li>
+            </ul>
+        </nav>
+
+        <header id="hero" class="pt-16 md:pt-24 pb-16 text-center">
+            <img src="01 (1).jpg" onerror="this.onerror=null; this.src='https://placehold.co/400x400/0f172a/67e8f9?text=TC'" alt="個人照片" class="rounded-full w-48 h-48 object-cover mx-auto mb-6 border-4 border-cyan-400 shadow-2xl">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-white">
+                你好，我是 TC
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-400 mb-8">專注於資訊安全、網頁開發與帶領團隊。</p>
+            <div class="space-x-4">
+                <a href="#contact" class="bg-cyan-500 hover:bg-cyan-600 text-slate-900 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block">聯繫我</a>
+                <a href="#projects" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block">查看作品集</a>
+            </div>
+        </header>
+
+        <section id="about" class="py-16 md:py-24 border-t border-slate-800">
+            <h2 class="text-4xl font-extrabold text-cyan-400 mb-12 text-center tracking-tight">關於我</h2>
+            <div class="max-w-3xl mx-auto bg-slate-800/70 p-8 rounded-xl shadow-2xl backdrop-blur-sm">
+                <p class="text-lg text-slate-300 leading-relaxed mb-4">
+                    我是一位喜歡鑽研資訊安全技術的高中生。
+                </p>
+                <p class="text-lg text-slate-300 leading-relaxed">
+                    我在資訊領域擁有多年的經驗，熱衷於探索最新的網頁技術，並致力於提升應用程式的安全性。我深信好的程式碼不僅要高效，更要經得起安全性的考驗。
+                </p>
+            </div>
+        </section>
+
+        <section id="skills" class="py-16 md:py-24 border-t border-slate-800">
+            <h2 class="text-5xl font-extrabold text-cyan-400 mb-12 text-center tracking-tight">核心技能</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                <div class="bg-slate-800/70 p-6 rounded-lg text-center shadow-md hover:bg-slate-700 transition duration-300 border border-slate-700 hover:border-cyan-400 backdrop-blur-sm">
+                    <p class="text-4xl mb-2 text-white">🛡️</p>
+                    <p class="font-bold text-cyan-300 text-xl">資訊安全</p>
+                    <p class="text-base text-slate-400">XSS, SQL, OWASP Top 10</p>
+                </div>
+                <div class="bg-slate-800/70 p-6 rounded-lg text-center shadow-md hover:bg-slate-700 transition duration-300 border border-slate-700 hover:border-cyan-400 backdrop-blur-sm">
+                    <p class="text-4xl mb-2 text-white">🌐</p>
+                    <p class="font-bold text-cyan-300 text-xl">前端開發</p>
+                    <p class="text-base text-slate-400">HTML, CSS、JS</p>
+                </div>
+                <div class="bg-slate-800/70 p-6 rounded-lg text-center shadow-md hover:bg-slate-700 transition duration-300 border border-slate-700 hover:border-cyan-400 backdrop-blur-sm">
+                    <p class="text-4xl mb-2 text-white">⚙️</p>
+                    <p class="font-bold text-cyan-300 text-xl">後端程式</p>
+                    <p class="text-base text-slate-400">Python, Node.js </p>
+                </div>
+                <div class="bg-slate-800/70 p-6 rounded-lg text-center shadow-md hover:bg-slate-700 transition duration-300 border border-slate-700 hover:border-cyan-400 backdrop-blur-sm">
+                    <p class="text-4xl mb-2 text-white">🖥️</p>
+                    <p class="font-bold text-cyan-300 text-xl">團隊/帶團隊</p>
+                    <p class="text-base text-slate-400">NIHSCEIWHC白帽資安社群</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-16 md:py-24 border-t border-slate-800">
+            <h2 class="text-4xl font-extrabold text-cyan-400 mb-12 text-center tracking-tight">專案與作品集</h2>
+            
+            <div class="max-w-xl mx-auto p-8 rounded-xl text-center bg-slate-800/70 backdrop-blur-sm shadow-2xl border border-slate-700">
+                <p class="text-3xl font-bold text-cyan-300 mb-4">
+                    🚧 暫無公開專案 🚧
+                </p>
+                <p class="text-lg text-slate-400">
+                    所有的研究和作品目前皆為內部使用或正在保密開發中，敬請期待未來釋出。
+                </p>
+            </div>
+        </section>
+
+        <section id="friends" class="py-16 md:py-24 border-t border-slate-800">
+            <h2 class="text-4xl font-extrabold text-cyan-400 mb-12 text-center tracking-tight">我的好友們</h2>
+            <div id="friends-container-wrapper" class="relative max-w-6xl mx-auto overflow-hidden bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <div id="friends-scroller" class="flex justify-center items-center h-48">
+                    <p class="text-2xl text-slate-400 font-medium">
+                        暫無好友資訊公開
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 md:py-24 border-t border-slate-800">
+            <h2 class="text-4xl font-extrabold text-cyan-400 mb-12 text-center tracking-tight">聯繫我</h2>
+            <div class="max-w-xl mx-auto bg-slate-800/70 p-8 rounded-xl shadow-2xl text-center border border-slate-700 backdrop-blur-sm">
+                <p class="text-lg text-slate-300 mb-6">
+                    如果您對我的開發有興趣，或是有任何問題，歡迎透過以下方式與我聯繫！
+                </p>
+                <div class="space-y-4">
+                    <p class="text-xl text-cyan-300 font-semibold">Email: fulemon666@gmail.com</p>
+                    <p class="text-lg text-slate-400">GitHub: <a href="https://github.com/TC-sudo-dps" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 transition underline">https://github.com/TC-sudo-dps</a></p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="py-6 text-center text-slate-500 text-sm border-t border-slate-800 mt-12 bg-slate-900/50">
+        <p>&copy; 2024 TC - 感謝大家的參觀，歡迎向我合作。</p>
+        <p class="text-xs mt-1">本網站使用 Three.js 製作 3D 背景，並由 Gemini 協助優化程式碼。</p>
+    </footer>
+
+    <script>
+        // 確保字體設置
+        document.body.style.fontFamily = 'Inter, sans-serif';
+
+        const container = document.getElementById('bg-3d');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // 創建星空
+        const starVertices = [];
+        for (let i = 0; i < 5000; i++) {
+            const x = THREE.MathUtils.randFloatSpread(2000);
+            const y = THREE.MathUtils.randFloatSpread(2000);
+            const z = THREE.MathUtils.randFloatSpread(2000);
+            starVertices.push(x, y, z);
+        }
+
+        const starGeometry = new THREE.BufferGeometry();
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+
+        const starMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 1.5,
+            sizeAttenuation: true,
+            transparent: true,
+            opacity: 0.9
+        });
+
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+
+        camera.position.z = 5;
+
+        // 動畫循環
+        function animate() {
+            requestAnimationFrame(animate);
+            // 讓星星緩慢轉動
+            stars.rotation.x += 0.0001;
+            stars.rotation.y += 0.0002;
+            renderer.render(scene, camera);
+        }
+
+        // 響應式調整
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 好友牆無限滾動邏輯
+        function initializeFriendScroller() {
+            const scroller = document.getElementById('friends-scroller');
+            
+            // 檢查是否有足夠的子元素來運行滾動動畫 (原始程式碼檢查 > 1 是為了複製內容)
+            // 由於目前內容是單一的 "暫無好友資訊公開" <p> 標籤，因此不執行複製和動畫。
+            const hasActualFriends = scroller && Array.from(scroller.children).some(child => child.classList.contains('friend-card'));
+
+            if (scroller && !hasActualFriends) {
+                // 如果沒有好友卡片，移除滾動動畫並確保內容居中
+                scroller.style.animation = 'none';
+                scroller.style.display = 'flex';
+                scroller.style.justifyContent = 'center';
+                scroller.style.alignItems = 'center';
+            } 
+            // 如果未來加入了多個 .friend-card，可以恢復以下邏輯
+            /* else if (scroller && hasActualFriends) {
+                const friendCards = Array.from(scroller.children);
+                friendCards.forEach(card => {
+                    const duplicatedCard = card.cloneNode(true);
+                    duplicatedCard.setAttribute('aria-hidden', true);
+                    scroller.appendChild(duplicatedCard);
+                });
+            }
+            */
+        }
+        
+        // 頁面載入完成後啟動
+        window.onload = function () {
+            animate();
+            initializeFriendScroller();
+        }
+    </script>
+</body>
+</html>

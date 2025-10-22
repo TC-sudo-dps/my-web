@@ -26,7 +26,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.8;
+            opacity: 0.9; 
         }
 
         /* 頁面內容最大寬度 */
@@ -194,7 +194,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
-        // 創建星空
+        // --- 星空設定 (重新引入) ---
         const starVertices = [];
         for (let i = 0; i < 5000; i++) {
             const x = THREE.MathUtils.randFloatSpread(2000);
@@ -211,20 +211,59 @@
             size: 1.5,
             sizeAttenuation: true,
             transparent: true,
-            opacity: 0.9
+            opacity: 0.8 // 星星可以稍微透明一點
         });
 
         const stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
+
+        // --- 載入器與月球紋理貼圖 ---
+        const textureLoader = new THREE.TextureLoader();
+        const moonTexture = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/moon_1024.jpg');
+        const moonBumpMap = textureLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/moon_bump_1024.jpg');
+
+
+        // --- 月亮設定 (保持不變) ---
+        const moonGeometry = new THREE.SphereGeometry(1.5, 64, 64);
+        const moonMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xffffff, 
+            map: moonTexture, 
+            bumpMap: moonBumpMap, 
+            bumpScale: 0.05, 
+            shininess: 5, 
+        });
+        const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+        
+        moon.position.set(-5, 4, -10); // 月亮位置
+        scene.add(moon);
+
+        // --- 光線設置 (保持不變，讓月亮有足夠的光照) ---
+        
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2); 
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 2); 
+        directionalLight.position.set(10, 5, 5); 
+        scene.add(directionalLight);
 
         camera.position.z = 5;
 
         // 動畫循環
         function animate() {
             requestAnimationFrame(animate);
-            // 讓星星緩慢轉動
+
+            // 星星緩慢轉動
             stars.rotation.x += 0.0001;
             stars.rotation.y += 0.0002;
+
+            // 月亮緩慢自轉
+            moon.rotation.y += 0.0005;
+            
+            // 月亮在背景中緩慢漂移
+            moon.position.x = -5 + Math.sin(Date.now() * 0.00005) * 2;
+            moon.position.y = 4 + Math.cos(Date.now() * 0.00005) * 1;
+
+
             renderer.render(scene, camera);
         }
 
@@ -235,31 +274,18 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // 好友牆無限滾動邏輯
+        // 好友牆無限滾動邏輯 (保持不變)
         function initializeFriendScroller() {
             const scroller = document.getElementById('friends-scroller');
             
-            // 檢查是否有足夠的子元素來運行滾動動畫 (原始程式碼檢查 > 1 是為了複製內容)
-            // 由於目前內容是單一的 "暫無好友資訊公開" <p> 標籤，因此不執行複製和動畫。
             const hasActualFriends = scroller && Array.from(scroller.children).some(child => child.classList.contains('friend-card'));
 
             if (scroller && !hasActualFriends) {
-                // 如果沒有好友卡片，移除滾動動畫並確保內容居中
                 scroller.style.animation = 'none';
                 scroller.style.display = 'flex';
                 scroller.style.justifyContent = 'center';
                 scroller.style.alignItems = 'center';
             } 
-            // 如果未來加入了多個 .friend-card，可以恢復以下邏輯
-            /* else if (scroller && hasActualFriends) {
-                const friendCards = Array.from(scroller.children);
-                friendCards.forEach(card => {
-                    const duplicatedCard = card.cloneNode(true);
-                    duplicatedCard.setAttribute('aria-hidden', true);
-                    scroller.appendChild(duplicatedCard);
-                });
-            }
-            */
         }
         
         // 頁面載入完成後啟動
